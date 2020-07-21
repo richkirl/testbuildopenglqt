@@ -1,0 +1,6 @@
+# ninja log v5
+0	637	1595321317033735808	trainingkeyboard@exe/moc_trkbd.cpp	c43a776ee1cebca0
+637	2269	1595321318668735722	trainingkeyboard@exe/meson-generated_moc_trkbd.cpp.o	af28f851c72864e2
+0	2294	1595321318693735721	trainingkeyboard@exe/main.cpp.o	438fc0e267288812
+0	2422	1595321318820735714	trainingkeyboard@exe/trkbd.cpp.o	ebdce0a7097f10c7
+2422	2747	1595321319145735697	trainingkeyboard	4e2eadd8d7891c3a
