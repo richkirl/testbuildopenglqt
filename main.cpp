@@ -1,5 +1,6 @@
-#include <QApplication>
-#include <QGLWidget>
+//#include <QApplication>
+//#include <QGLWidget>
+#include <qt5/QtWidgets/QApplication>
 #include <iostream>
 #include "trkbd.hpp"
 using namespace std;

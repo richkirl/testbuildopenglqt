@@ -2,8 +2,8 @@
 #ifndef TRKBD_HPP
 #define TRKBD_HPP
 #include <QKeyEvent>
-#include <QGLWidget>
-//#include <filesystem>
+#include <qt5/QtOpenGL/QGLWidget>
+#include <QTime>
 
 class trkbd : public QGLWidget {
   Q_OBJECT
@@ -20,22 +20,30 @@ class trkbd : public QGLWidget {
       QString ch;
       int live;
     };
-
+  std::list<QString> *p;
   grid scren[trkbd::W][trkbd::H];
 
   //
-  int timerID;
+    int i=0;
+
+    int second=0;
+    int timerID;
+    int stringelement;
   trkbd();
   ~trkbd();
   void setX(int);
   int X(int);
   void setY(int);
   int Y(int);
-  int x1;int y1;
+  int x1=0;int y1=0;
+
+  QTime a;
+  private slots:
+    void updatetime();
  private :
   void initializeGL() override;
   void resizeGL(int, int) override;
-  void paintGL();
+  void paintGL() override;
   void keyReleaseEvent(QKeyEvent *) override;
     virtual
     void resizeEvent(QResizeEvent *) override;
