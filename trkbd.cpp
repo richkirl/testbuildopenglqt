@@ -1,11 +1,14 @@
 #include "trkbd.hpp"
 #include <GL/gl.h>
+#include <QDebug>
 #include <QFont>
+#include <QString>
 #include <QTimer>
 #include <iostream>
 #include <list>
 #include <map>
 #include <random>
+#include <sstream>
 #include <vector>
 trkbd::trkbd() { trkbd::inithisprogram(); }
 trkbd::~trkbd() {}
@@ -35,8 +38,7 @@ void trkbd::paintGL() {
   _draw();
 }
 void trkbd::keyReleaseEvent(QKeyEvent *apkey) {
-  if (trkbd::keytointmap.find(trkbd::stringelement)->second ==
-      (int)(apkey->key())) {
+  if (trkbd::keytointmap.find(trkbd::stringelement)->second == (apkey->key())) {
     trkbd::getrandpelement();
     _draw();
   }
@@ -71,32 +73,17 @@ void trkbd::inithisprogram() {
   trkbd::second = 0;
   trkbd::stringelement = 97;
   trkbd::i = 1;
-  trkbd::keytointmap.insert(std::pair<int, QString>(97, Qt::Key_A));
-  trkbd::keytointmap.insert(std::pair<int, QString>(98, Qt::Key_B));
-  trkbd::keytointmap.insert(std::pair<int, QString>(99, Qt::Key_C));
-  trkbd::keytointmap.insert(std::pair<int, QString>(100, Qt::Key_D));
-  trkbd::keytointmap.insert(std::pair<int, QString>(101, Qt::Key_E));
-  trkbd::keytointmap.insert(std::pair<int, QString>(102, Qt::Key_F));
-  trkbd::keytointmap.insert(std::pair<int, QString>(103, Qt::Key_G));
-  trkbd::keytointmap.insert(std::pair<int, QString>(104, Qt::Key_H));
-  trkbd::keytointmap.insert(std::pair<int, QString>(105, Qt::Key_I));
-  trkbd::keytointmap.insert(std::pair<int, QString>(106, Qt::Key_J));
-  trkbd::keytointmap.insert(std::pair<int, QString>(107, Qt::Key_K));
-  trkbd::keytointmap.insert(std::pair<int, QString>(108, Qt::Key_L));
-  trkbd::keytointmap.insert(std::pair<int, QString>(109, Qt::Key_M));
-  trkbd::keytointmap.insert(std::pair<int, QString>(110, Qt::Key_N));
-  trkbd::keytointmap.insert(std::pair<int, QString>(111, Qt::Key_O));
-  trkbd::keytointmap.insert(std::pair<int, QString>(112, Qt::Key_P));
-  trkbd::keytointmap.insert(std::pair<int, QString>(113, Qt::Key_Q));
-  trkbd::keytointmap.insert(std::pair<int, QString>(114, Qt::Key_R));
-  trkbd::keytointmap.insert(std::pair<int, QString>(115, Qt::Key_S));
-  trkbd::keytointmap.insert(std::pair<int, QString>(116, Qt::Key_T));
-  trkbd::keytointmap.insert(std::pair<int, QString>(117, Qt::Key_U));
-  trkbd::keytointmap.insert(std::pair<int, QString>(118, Qt::Key_V));
-  trkbd::keytointmap.insert(std::pair<int, QString>(119, Qt::Key_W));
-  trkbd::keytointmap.insert(std::pair<int, QString>(120, Qt::Key_X));
-  trkbd::keytointmap.insert(std::pair<int, QString>(121, Qt::Key_Y));
-  trkbd::keytointmap.insert(std::pair<int, QString>(122, Qt::Key_Z));
+  int N = 122;
+  std::stringstream ss;
+  int o;
+  for (int l = 97; l < N; l++) {
+    o = l - 32;
+    ss << o;
+    trkbd::s.push_back(ss.str().c_str());
+    trkbd::keytointmap.insert(std::pair<int, QString>(l, trkbd::s.toInt()));
+    trkbd::s.clear();
+    ss.str("");
+  }
   QTimer *tmr = new QTimer(this);
   connect(tmr, SIGNAL(timeout()), this, SLOT(updateGL()));
   tmr->start(33);

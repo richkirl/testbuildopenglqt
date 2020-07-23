@@ -21,7 +21,8 @@ public:
   int i = 0;
   int second = 0;
   int timerID;
-  int stringelement;
+    int stringelement;
+    QString s;
   std::map<int, QString> keytointmap;
   trkbd();
   ~trkbd();
