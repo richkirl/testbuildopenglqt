@@ -1,5 +1,4 @@
 #include "trkbd.hpp"
-//#include <QKeyvent>
 #include <GL/gl.h>
 #include <QFont>
 #include <QTimer>
@@ -8,7 +7,64 @@
 #include <map>
 #include <random>
 #include <vector>
-trkbd::trkbd() {
+trkbd::trkbd() { trkbd::inithisprogram(); }
+trkbd::~trkbd() {}
+void trkbd::initializeGL() {
+  glViewport(0, 0, 800, 600);
+  glLoadIdentity();
+  glOrtho(0, 800, 0, 600, 0, 1);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  glDisable(GL_DEPTH);
+  glEnable(GL_MULTISAMPLE);
+  glEnable(GL_BLEND);
+  glEnable(GL_LINE_SMOOTH);
+  glEnable(GL_POINT_SMOOTH);
+  glEnable(GL_SMOOTH);
+}
+void trkbd::resizeGL(int aw, int ah) {
+  glViewport(0, 0, (GLint)aw, (GLint)ah);
+  glLoadIdentity();
+  glOrtho(0, aw, ah, 0, 0, 1);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+}
+void trkbd::paintGL() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  qglClearColor(Qt::black);
+  _processing();
+  _draw();
+}
+void trkbd::keyReleaseEvent(QKeyEvent *apkey) {
+  if (trkbd::keytointmap.find(trkbd::stringelement)->second ==
+      (int)(apkey->key())) {
+    trkbd::getrandpelement();
+    _draw();
+  }
+  if (apkey->key() == Qt::Key_Escape) {
+    close();
+  }
+}
+void trkbd::resizeEvent(QResizeEvent *) {}
+void trkbd::timerEvent(QTimerEvent *e) {
+  Q_UNUSED(e)
+  updatetime();
+}
+void trkbd::_processing() {
+  trkbd::y1++;
+  if (trkbd::y1 == trkbd::height())
+    trkbd::y1 = 1;
+}
+void trkbd::_draw() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  static auto font = QFont("terminus", 18);
+  renderText(trkbd::x1 * trkbd::i, trkbd::y1, (QString)trkbd::stringelement,
+             font);
+}
+void trkbd::getrandpelement() {
+  trkbd::i = rand() % 32;
+  trkbd::stringelement = rand() % 26 + 97;
+}
+void trkbd::inithisprogram() {
   x1 = 20;
   y1 = 20;
   trkbd::a.setHMS(0, 0, 0);
@@ -45,317 +101,6 @@ trkbd::trkbd() {
   connect(tmr, SIGNAL(timeout()), this, SLOT(updateGL()));
   tmr->start(33);
   timerID = startTimer(32);
-}
-trkbd::~trkbd() {}
-void trkbd::initializeGL() {
-  glViewport(0, 0, 800, 600);
-  glLoadIdentity();
-  glOrtho(0, 800, 0, 600, 0, 1);
-  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glDisable(GL_DEPTH);
-  glEnable(GL_MULTISAMPLE);
-  glEnable(GL_BLEND);
-  glEnable(GL_LINE_SMOOTH);
-  glEnable(GL_POINT_SMOOTH);
-  glEnable(GL_SMOOTH);
-}
-void trkbd::resizeGL(int aw, int ah) {
-  glViewport(0, 0, (GLint)aw, (GLint)ah);
-  glLoadIdentity();
-  glOrtho(0, aw, ah, 0, 0, 1);
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-}
-void trkbd::paintGL() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  qglClearColor(Qt::black);
-  _processing();
-  _draw();
-}
-void trkbd::keyReleaseEvent(QKeyEvent *apkey) {
-  switch (apkey->key()) {
-  case Qt::Key_Q: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_Q)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_W: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_W)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_E: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_E)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_R: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_R)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_T: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_T)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_Y: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_Y)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_U: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_U)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_I: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_I)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_O: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_O)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_P: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_P)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_A: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_A)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_S: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_S)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_D: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_D)
-      break;
-    else {
-
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_F: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_F)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_G: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_G)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_H: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_H)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_J: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_J)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_K: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_K)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_L: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_L)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_Z: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_Z)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_X: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_X)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_C: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_C)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_V: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_V)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_B: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_B)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_N: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_N)
-      break;
-    else {
-
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_M: {
-    if (trkbd::keytointmap.find(trkbd::stringelement)->second != Qt::Key_M)
-      break;
-    else {
-      trkbd::i = rand() % 32;
-      trkbd::stringelement = rand() % 26 + 97;
-      _draw();
-      break;
-    }
-  }
-  case Qt::Key_Escape: {
-    close();
-  }
-  }
-}
-void trkbd::resizeEvent(QResizeEvent *) {}
-void trkbd::timerEvent(QTimerEvent *e) {
-  Q_UNUSED(e)
-  updatetime();
-}
-void trkbd::_processing() {
-  trkbd::y1++;
-  if (trkbd::y1 == trkbd::height())
-    trkbd::y1 = 1;
-}
-void trkbd::_draw() {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  static auto font = QFont("terminus", 18);
-  renderText(trkbd::x1 * trkbd::i, trkbd::y1, (QString)trkbd::stringelement,
-             font);
 }
 void trkbd::setX(int x) { x1 = x; }
 int trkbd::X(int x) { return x; }
