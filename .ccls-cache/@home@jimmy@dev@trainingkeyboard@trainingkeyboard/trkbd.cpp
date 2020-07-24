@@ -76,7 +76,7 @@ void trkbd::inithisprogram() {
   int N = 122;
   std::stringstream ss;
   int o;
-  for (int l = 97; l < N; l++) {
+  for (int l = 97; l != N; ++l) {
     o = l - 32;
     ss << o;
     trkbd::s.push_back(ss.str().c_str());
